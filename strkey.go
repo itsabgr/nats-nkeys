@@ -15,7 +15,6 @@ package nkeys
 
 import (
 	"bytes"
-	"encoding/base32"
 	"encoding/binary"
 	"golang.org/x/crypto/ed25519"
 )
@@ -50,7 +49,7 @@ const (
 )
 
 // Set our encoding to not include padding '=='
-var b32Enc = base32.StdEncoding.WithPadding(base32.NoPadding)
+var hexEnc = HexEncoding{}
 
 // Encode will encode a raw key or seed with the prefix and crc16 and then base32 encoded.
 func Encode(prefix PrefixByte, src []byte) ([]byte, error) {
@@ -77,8 +76,8 @@ func Encode(prefix PrefixByte, src []byte) ([]byte, error) {
 	}
 
 	data := raw.Bytes()
-	buf := make([]byte, b32Enc.EncodedLen(len(data)))
-	b32Enc.Encode(buf, data)
+	buf := make([]byte, hexEnc.EncodedLen(len(data)))
+	hexEnc.Encode(buf, data)
 	return buf[:], nil
 }
 
@@ -114,8 +113,8 @@ func EncodeSeed(public PrefixByte, src []byte) ([]byte, error) {
 	}
 
 	data := raw.Bytes()
-	buf := make([]byte, b32Enc.EncodedLen(len(data)))
-	b32Enc.Encode(buf, data)
+	buf := make([]byte, hexEnc.EncodedLen(len(data)))
+	hexEnc.Encode(buf, data)
 	return buf, nil
 }
 
@@ -127,8 +126,8 @@ func IsValidEncoding(src []byte) bool {
 
 // decode will decode the base32 and check crc16 and the prefix for validity.
 func decode(src []byte) ([]byte, error) {
-	raw := make([]byte, b32Enc.DecodedLen(len(src)))
-	n, err := b32Enc.Decode(raw, src)
+	raw := make([]byte, hexEnc.DecodedLen(len(src)))
+	n, err := hexEnc.Decode(raw, src)
 	if err != nil {
 		return nil, err
 	}
