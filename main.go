@@ -91,7 +91,7 @@ func FromSeed(seed []byte) (KeyPair, error) {
 		return nil, err
 	}
 	copy := append([]byte{}, seed...)
-	return &kp{copy}, nil
+	return &kp2{copy}, nil
 }
 
 // FromRawSeed will create a KeyPair from the raw 32 byte seed for a given type.
@@ -100,5 +100,5 @@ func FromRawSeed(prefix PrefixByte, rawSeed []byte) (KeyPair, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &kp{seed}, nil
+	return &kp2{seed}, nil
 }

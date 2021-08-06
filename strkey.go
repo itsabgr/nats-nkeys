@@ -16,7 +16,7 @@ package nkeys
 import (
 	"bytes"
 	"encoding/binary"
-	"golang.org/x/crypto/ed25519"
+	"github.com/itsabgr/nkeys/pkg/secp256k1"
 )
 
 // PrefixByte is a lead byte representing the type.
@@ -87,7 +87,7 @@ func EncodeSeed(public PrefixByte, src []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	if len(src) != ed25519.SeedSize {
+	if len(src) != secp256k1.SeedSize {
 		return nil, ErrInvalidSeedLen
 	}
 

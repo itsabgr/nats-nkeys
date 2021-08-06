@@ -14,15 +14,14 @@
 package nkeys
 
 import (
-	"bytes"
 	"crypto/rand"
+	"github.com/itsabgr/nkeys/pkg/secp256k1"
+	tmcrypto "github.com/tendermint/tendermint/crypto"
 	"io"
-
-	"golang.org/x/crypto/ed25519"
 )
 
 // kp is the internal struct for a kepypair using seed.
-type kp struct {
+type kp2 struct {
 	seed []byte
 }
 
@@ -39,47 +38,45 @@ func CreatePair(prefix PrefixByte) (KeyPair, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &kp{seed}, nil
+	return &kp2{seed}, nil
 }
 
 // rawSeed will return the raw, decoded 64 byte seed.
-func (pair *kp) rawSeed() ([]byte, error) {
+func (pair *kp2) rawSeed() ([]byte, error) {
 	_, raw, err := DecodeSeed(pair.seed)
 	return raw, err
 }
 
 // keys will return a 32 byte public key and a 64 byte private key utilizing the seed.
-func (pair *kp) keys() (ed25519.PublicKey, ed25519.PrivateKey, error) {
+func (pair *kp2) keys() (tmcrypto.PubKey, tmcrypto.PrivKey, error) {
 	raw, err := pair.rawSeed()
 	if err != nil {
 		return nil, nil, err
 	}
-	return ed25519.GenerateKey(bytes.NewReader(raw))
+	pv := secp256k1.GenPrivKeySecp256k1(raw)
+	return pv.PubKey(), pv, nil
 }
 
 // Wipe will randomize the contents of the seed key
-func (pair *kp) Wipe() {
+func (pair *kp2) Wipe() {
 	io.ReadFull(rand.Reader, pair.seed)
 	pair.seed = nil
 }
 
 // Seed will return the encoded seed.
-func (pair *kp) Seed() ([]byte, error) {
+func (pair *kp2) Seed() ([]byte, error) {
 	return pair.seed, nil
 }
 
 // PublicKey will return the encoded public key associated with the KeyPair.
 // All KeyPairs have a public key.
-func (pair *kp) PublicKey() (string, error) {
+func (pair *kp2) PublicKey() (string, error) {
 	public, raw, err := DecodeSeed(pair.seed)
 	if err != nil {
 		return "", err
 	}
-	pub, _, err := ed25519.GenerateKey(bytes.NewReader(raw))
-	if err != nil {
-		return "", err
-	}
-	pk, err := Encode(public, pub)
+	pub := secp256k1.GenPrivKeySecp256k1(raw).PubKey()
+	pk, err := Encode(public, pub.Bytes())
 	if err != nil {
 		return "", err
 	}
@@ -87,30 +84,30 @@ func (pair *kp) PublicKey() (string, error) {
 }
 
 // PrivateKey will return the encoded private key for KeyPair.
-func (pair *kp) PrivateKey() ([]byte, error) {
+func (pair *kp2) PrivateKey() ([]byte, error) {
 	_, priv, err := pair.keys()
 	if err != nil {
 		return nil, err
 	}
-	return Encode(PrefixBytePrivate, priv)
+	return Encode(PrefixBytePrivate, priv.Bytes())
 }
 
 // Sign will sign the input with KeyPair's private key.
-func (pair *kp) Sign(input []byte) ([]byte, error) {
+func (pair *kp2) Sign(input []byte) ([]byte, error) {
 	_, priv, err := pair.keys()
 	if err != nil {
 		return nil, err
 	}
-	return ed25519.Sign(priv, input), nil
+	return priv.Sign(input)
 }
 
 // Verify will verify the input against a signature utilizing the public key.
-func (pair *kp) Verify(input []byte, sig []byte) error {
+func (pair *kp2) Verify(input []byte, sig []byte) error {
 	pub, _, err := pair.keys()
 	if err != nil {
 		return err
 	}
-	if !ed25519.Verify(pub, input, sig) {
+	if !pub.VerifySignature(input, sig) {
 		return ErrInvalidSignature
 	}
 	return nil
