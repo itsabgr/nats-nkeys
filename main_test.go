@@ -22,7 +22,7 @@ import (
 	"regexp"
 	"testing"
 
-	"golang.org/x/crypto/ed25519"
+	"github.com/itsabgr/nkeys/pkg/secp256k1"
 )
 
 func TestVersion(t *testing.T) {
@@ -107,7 +107,7 @@ func TestSeed(t *testing.T) {
 		t.Fatalf("Did not receive ErrInvalidPrefixByte error, received %v", err)
 	}
 
-	var rawSeed [ed25519.SeedSize]byte
+	var rawSeed [secp256k1.SeedSize]byte
 
 	_, err = io.ReadFull(rand.Reader, rawSeed[:])
 	if err != nil {
@@ -176,9 +176,9 @@ func TestAccount(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unexpected error signing from account: %v", err)
 	}
-	if len(sig) != ed25519.SignatureSize {
+	if len(sig) != secp256k1.SignatureSize {
 		t.Fatalf("Expected signature size of %d but got %d",
-			ed25519.SignatureSize, len(sig))
+			secp256k1.SignatureSize, len(sig))
 	}
 	err = account.Verify(data, sig)
 	if err != nil {
@@ -429,7 +429,7 @@ func TestKeyPairFailures(t *testing.T) {
 	if _, err := CreatePair(PrefixBytePrivate); err == nil {
 		t.Fatal("Expected an error with non-public prefix")
 	}
-	kpbad := &kp{[]byte("SEEDBAD")}
+	kpbad := &kp2{[]byte("SEEDBAD")}
 	if _, _, err := kpbad.keys(); err == nil {
 		t.Fatal("Expected an error decoding keys with a bad seed")
 	}
@@ -523,12 +523,12 @@ func TestWipe(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Received an error retrieving public key: %v", err)
 	}
-	seed := user.(*kp).seed
+	seed := user.(*kp2).seed
 	// Copy so we know the original
 	copy := append([]byte{}, seed...)
 	user.Wipe()
 	// Make sure new seed is nil
-	if wiped := user.(*kp).seed; wiped != nil {
+	if wiped := user.(*kp2).seed; wiped != nil {
 		t.Fatalf("Expected the seed to be nil, got %q", wiped)
 	}
 	// Make sure the original seed is not equal to the seed in memory.
