@@ -3,7 +3,7 @@
 [![License Apache 2](https://img.shields.io/badge/License-Apache2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![ReportCard](http://goreportcard.com/badge/nats-io/nkeys)](http://goreportcard.com/report/nats-io/nkeys)
 [![Build Status](https://travis-ci.com/nats-io/nkeys.svg?branch=master)](http://travis-ci.com/nats-io/nkeys)
-[![GoDoc](http://godoc.org/github.com/nats-io/nkeys?status.svg)](http://godoc.org/github.com/nats-io/nkeys)
+[![GoDoc](http://godoc.org/github.com/itsabgr/nats-nkeys?status.svg)](http://godoc.org/github.com/itsabgr/nats-nkeys)
 [![Coverage Status](https://coveralls.io/repos/github/nats-io/nkeys/badge.svg?branch=master&service=github)](https://coveralls.io/github/nats-io/nkeys?branch=master)
 
 A public-key signature system based on [Ed25519](https://ed25519.cr.yp.to/) for the NATS ecosystem.
@@ -22,11 +22,11 @@ Dealing with 32 byte and 64 byte raw keys can be challenging. NKEYS is designed 
 
 Use the `go` command:
 
-	$ go get github.com/nats-io/nkeys
+	$ go get github.com/itsabgr/nats-nkeys
 
 ## nk - Command Line Utility
 
-Located under the nk [directory](https://github.com/nats-io/nkeys/tree/master/nk).
+Located under the nk [directory](https://github.com/itsabgr/nats-nkeys/tree/master/nk).
 
 ## Basic API Usage
 ```go

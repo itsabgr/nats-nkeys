@@ -1,4 +1,4 @@
-module github.com/itsabgr/nkeys
+module github.com/itsabgr/nats-nkeys
 
 go 1.16
 

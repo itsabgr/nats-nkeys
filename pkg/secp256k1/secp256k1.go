@@ -9,7 +9,6 @@ import (
 	"math/big"
 
 	secp256k1 "github.com/btcsuite/btcd/btcec"
-	tmjson "github.com/itsabgr/nkeys/pkg/json"
 	"github.com/tendermint/tendermint/crypto"
 
 	// necessary for Bitcoin address format
@@ -18,17 +17,9 @@ import (
 
 //-------------------------------------
 const (
-	PrivKeyName = "tendermint/PrivKeySecp256k1"
-	PubKeyName  = "tendermint/PubKeySecp256k1"
-
 	KeyType     = "secp256k1"
 	PrivKeySize = 32
 )
-
-func init() {
-	tmjson.RegisterType(PubKey{}, PubKeyName)
-	tmjson.RegisterType(PrivKey{}, PrivKeyName)
-}
 
 var _ crypto.PrivKey = PrivKey{}
 

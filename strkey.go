@@ -16,7 +16,7 @@ package nkeys
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/itsabgr/nkeys/pkg/secp256k1"
+	"github.com/itsabgr/nats-nkeys/pkg/secp256k1"
 )
 
 // PrefixByte is a lead byte representing the type.

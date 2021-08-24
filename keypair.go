@@ -15,7 +15,7 @@ package nkeys
 
 import (
 	"crypto/rand"
-	"github.com/itsabgr/nkeys/pkg/secp256k1"
+	"github.com/itsabgr/nats-nkeys/pkg/secp256k1"
 	tmcrypto "github.com/tendermint/tendermint/crypto"
 	"io"
 )

@@ -22,7 +22,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/itsabgr/nkeys/pkg/secp256k1"
+	"github.com/itsabgr/nats-nkeys/pkg/secp256k1"
 )
 
 func TestVersion(t *testing.T) {
@@ -525,14 +525,14 @@ func TestWipe(t *testing.T) {
 	}
 	seed := user.(*kp2).seed
 	// Copy so we know the original
-	copy := append([]byte{}, seed...)
+	copy1 := append([]byte{}, seed...)
 	user.Wipe()
 	// Make sure new seed is nil
 	if wiped := user.(*kp2).seed; wiped != nil {
 		t.Fatalf("Expected the seed to be nil, got %q", wiped)
 	}
 	// Make sure the original seed is not equal to the seed in memory.
-	if bytes.Equal(seed, copy) {
+	if bytes.Equal(seed, copy1) {
 		t.Fatalf("Expected the memory for the seed to be randomized")
 	}
 
@@ -544,7 +544,7 @@ func TestWipe(t *testing.T) {
 
 	edPub := user.(*pub).pub
 	// Copy so we know the original
-	copy = append([]byte{}, edPub...)
+	copy1 = append([]byte{}, edPub...)
 
 	user.Wipe()
 
@@ -554,7 +554,7 @@ func TestWipe(t *testing.T) {
 	}
 
 	// Make sure the original key is not equal to the one in memory.
-	if bytes.Equal(edPub, copy) {
+	if bytes.Equal(edPub, copy1) {
 		t.Fatalf("Expected the memory for the pubKey to be randomized")
 	}
 }

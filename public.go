@@ -17,7 +17,7 @@ import (
 	"crypto/rand"
 	"io"
 
-	"github.com/itsabgr/nkeys/pkg/secp256k1"
+	"github.com/itsabgr/nats-nkeys/pkg/secp256k1"
 )
 
 // A KeyPair from a public key capable of verifying only.
@@ -47,7 +47,7 @@ func (p *pub) PrivateKey() ([]byte, error) {
 }
 
 // Sign will return an error since this is not available for public key only KeyPairs.
-func (p *pub) Sign(input []byte) ([]byte, error) {
+func (p *pub) Sign(_ []byte) ([]byte, error) {
 	return nil, ErrCannotSign
 }
 
